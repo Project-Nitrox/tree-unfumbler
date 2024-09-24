@@ -6,6 +6,7 @@
 # main.py
 #
 import argparse
+import difflib
 from pathlib import Path
 
 
@@ -40,14 +41,38 @@ class Tree(object):
         return str(self.filename + "." + self.filetype)
 
 
+def get_pafway() -> Path:
+    pafway = None
+
+    with open("./pafway.txt", "r") as pafway_file:
+        pafway = pafway_file.read()
+        pafway = pafway.strip('\n')
+        print(pafway)
+
+    pafway_file.close()
+    return Path(pafway) # toeden
+
+
+def print_pathtree(dir_path: Path, prefix: str=''):
+    subdirs = list(dir_path.iterdir())
+    print(subdirs)
+
+
 if __name__ == "__main__":
-    print("let's go")
     tree = Tree("somescript", "lua")
     print(tree.to_string())
     tree2 = Tree("directory", "/")
     print(tree2.to_string())
     tree2.add_child(tree)
     print(tree2.to_string())
+    # print_pathtree(Path.cwd() / get_pafway())
+    print_pathtree(get_pafway())
+    # print pretty tree - https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
+    # save tree in Tree object
+    # save path Tree to a file
+    # pick file from path Tree and print diffs - https://docs.python.org/3/library/difflib.html
+    # automate this
+
 
 ####### Copyleft LVSA 09.2024
 # Terms of use:
