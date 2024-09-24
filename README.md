@@ -13,4 +13,4 @@ Python project for identifying code duplication issues in PN² v1.5 and perhaps 
 #### `. ./.venv/bin/activate` (Linux/UNIX/macOS?) | `.\.venv\bin\activate.ps1` (Win) 
 #### `cd app`
 
-#### `python  main.py`
+#### `python main.py`
