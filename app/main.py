@@ -28,7 +28,7 @@ class Tree(object):
         self.children.append(child)
 
 
-    def to_string(self, parent_depth=None, depth=0, prefix="") -> str:
+    def to_string(self, parent_depth=None, depth=0, inner_index=0) -> str:
         tree_str: str = self.filename
 
         parent_depth = depth - 1 if depth != 0 else None
@@ -46,35 +46,51 @@ class Tree(object):
         if self.filetype == "/": # is dir
             if self.children == None: # is enmpty dir
                 tree_str = self.filename + self.filetype + depth_tuple + '\n'
+                return tree_str
             else:
-                if parent_depth == None: # is root 
+                if parent_depth == None: # is root, special case recurse 
                     tree_str = self.filename + self.filetype + '\n'
-                else: # is dir with stuff; recurse
-                    tree_str = tree_str + child.to_string(depth=depth+1, prefix=prefix)
+                    for child in self.children:
+                        return self.to_string(depth=1)
+                else: # is dir with children; recurse
+                    tree_str = self.filename + self.filetype + depth_tuple + '\n'
+                    for child, i in zip(self.children, range(len(self.children))):
+                        if i == len(self.children) - 1:
+                            pass
+                            # tree_str = tpf_lastleaf + tree_str
+                        else:
+                            pass
+                            # tree_str = tpf_leaf + tree_str
+                        # debug variant:
+                        # tree_str = tree_str + str(f"[{i},{len(self.children)}]") + child.to_string(depth=depth+1, prefix=tree_str)
+                        tree_str = tree_str + str(f"[{inner_index},{len(self.children)}]") + child.to_string(depth=depth+1, inner_index=len(self.children) - 1)
+                    return tree_str
             tree_str = self.filename + self.filetype + depth_tuple + '\n'
+            return tree_str
             
         else: # is file
             tree_str = self.filename + "." + self.filetype + depth_tuple + '\n'
+            return tree_str
             
 
-        if self.filetype == "/" and self.children != None:
-            tree_str = self.filename + "/" + depth_tuple + '\n'
-            tree_str = ("" if parent_depth == None else tpf_space + tpf_leaf) + tree_str
-            for child in self.children:
-                tree_str = tree_str + child.to_string(depth=depth+1, prefix=prefix)
-            return tree_str
-        elif self.filetype == "/" and self.children == None:
-            tree_str = self.filename + "/"
-            # if depth >= parent_depth:
-            #     p = p + tpf_space
-            #     tree_str = tpf_space + tpf_leaf + tree_str
-            return tree_str + depth_tuple + '\n'
-        else:
-            tree_str = self.filename + "." + self.filetype
-            if depth >= parent_depth:
-                prefix = prefix + tpf_space
-                tree_str = tpf_space + tpf_leaf + tree_str
-            return prefix + tree_str + depth_tuple + '\n'
+        # if self.filetype == "/" and self.children != None:
+        #     tree_str = self.filename + "/" + depth_tuple + '\n'
+        #     tree_str = ("" if parent_depth == None else tpf_space + tpf_leaf) + tree_str
+        #     for child in self.children:
+        #         tree_str = tree_str + child.to_string(depth=depth+1, prefix=prefix)
+        #     return tree_str
+        # elif self.filetype == "/" and self.children == None:
+        #     tree_str = self.filename + "/"
+        #     # if depth >= parent_depth:
+        #     #     p = p + tpf_space
+        #     #     tree_str = tpf_space + tpf_leaf + tree_str
+        #     return tree_str + depth_tuple + '\n'
+        # else:
+        #     tree_str = self.filename + "." + self.filetype
+        #     if depth >= parent_depth:
+        #         prefix = prefix + tpf_space
+        #         tree_str = tpf_space + tpf_leaf + tree_str
+        #     return prefix + tree_str + depth_tuple + '\n'
 
 
 def get_pafway() -> Path:
