@@ -14,3 +14,12 @@ Python project for identifying code duplication issues in PN² v1.5 and perhaps 
 #### `cd app`
 
 #### `python main.py`
+
+## The master plan pipeline
+
+- [ ] save tree in Tree object
+- [ ] save path Tree to a file
+- [ ] identify duplicate name files
+- [ ] pick a duplicate file name from path Tree and print its [diffs](https://docs.python.org/3/library/difflib.html)
+- [ ] Save diffs to a file, e.g. a Google Sheet for ease of analyzing.
+- [ ] automate this
