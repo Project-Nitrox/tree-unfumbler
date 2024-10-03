@@ -28,17 +28,39 @@ class Tree(object):
         self.children.append(child)
 
 
-    def to_string(self) -> str:
-        if self.filetype == "/":
-            if self.children != None:
-                tree_str: str = self.filename + "/"
-                for child in self.children:
-                    tree_str = tree_str + child.to_string()
-                return tree_str
+    def to_string(self, parent_depth=None, depth=0, prefix="") -> str:
+        p: str = prefix
+        tree_str: str = self.filename
 
-            return str(self.filename + "/")
+        parent_depth = depth - 1 if depth != 0 else None
+        depth_tuple = " " + str(tuple((parent_depth, depth)))
 
-        return str(self.filename + "." + self.filetype)
+        tpf_space = ' ' * 4
+        tpf_branch = '|' + ' ' * 3
+        tpf_leaf = '├── '
+        tpf_lastleaf = '└── '
+        tree_prefixes = list()
+        subdirs = list(root_dir.iterdir())
+        tree_prefixes = [tpf_leaf] * (len(subdirs) - 1) + [tpf_lastleaf]
+
+        if self.filetype == "/" and self.children != None:
+            tree_str = self.filename + "/" + depth_tuple + '\n'
+            tree_str = (tpf_lastleaf if parent_depth == None else tpf_space + tpf_leaf) + tree_str
+            for child in self.children:
+                tree_str = tree_str + child.to_string(depth=depth+1, prefix=p)
+            return tree_str
+        elif self.filetype == "/" and self.children == None:
+            tree_str = self.filename + "/"
+            # if depth >= parent_depth:
+            #     p = p + tpf_space
+            #     tree_str = tpf_space + tpf_leaf + tree_str
+            return tree_str + depth_tuple + '\n'
+        else:
+            tree_str = self.filename + "." + self.filetype
+            if depth >= parent_depth:
+                p = p + tpf_space
+                tree_str = tpf_space + tpf_leaf + tree_str
+            return p + tree_str + depth_tuple + '\n'
 
 
 def get_pafway() -> Path:
@@ -56,10 +78,10 @@ def get_pafway() -> Path:
 def print_pathtree(dir_path: Path, prefix: str=''):
     subdirs = list(dir_path.iterdir())
 
-    # tpf_space = ' ' * 4
-    # tpf_branch = '|' + ' ' * 3
-    # tpf_leaf = '├── '
-    # tpf_lastleaf = '└── '
+    tpf_space = ' ' * 4
+    tpf_branch = '|' + ' ' * 3
+    tpf_leaf = '├── '
+    tpf_lastleaf = '└── '
     
     tree_prefixes = [tpf_leaf] * (len(subdirs) - 1) + [tpf_lastleaf]
     for tree_prefix, path in zip(tree_prefixes, subdirs):
@@ -89,7 +111,8 @@ if __name__ == "__main__":
 
     file21 = Tree("button", "lua")
     file22 = Tree("whatever", "json")
-    dir2 = Tree("directory_2", "/", [file21, file22])
+    dir21 = Tree("subdir", "/", [file21, file22, file12])
+    dir2 = Tree("directory_2", "/", [file21, file22, dir21])
 
     dir3 = Tree("enmpty", "/")
     file_alone = Tree("lonelyscript", "lua")
@@ -99,8 +122,6 @@ if __name__ == "__main__":
     # for line in print_pathtree(get_pafway()):
     #     print(line)
     
-    
-
 
 ####### Copyleft LVSA 09-10.2024
 # Terms of use:
