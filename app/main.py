@@ -41,22 +41,19 @@ class Tree(object):
         # tree_prefixes = list()
         # subdirs = list(Path(root_dir.iterdir()))
         # tree_prefixes = [tpf_leaf] * (len(subdirs) - 1) + [tpf_lastleaf]
-        if self.filetype == "/":
-            
-            if self.children == None:
-                # is enmpty dir
-                tree_str = tree_str
+
+
+        if self.filetype == "/": # is dir
+            if self.children == None: # is enmpty dir
+                tree_str = self.filename + self.filetype + depth_tuple + '\n'
             else:
-                if parent_depth == None:
-                    # is root 
-                    tree_str = self.filename
-                else:
-                    # is dir with stuff; recurse
-                    tree_str = tree_str
-            tree_str = self.filename + "/" + depth_tuple + '\n'
-            # is dir
-        else:
-            # is file
+                if parent_depth == None: # is root 
+                    tree_str = self.filename + self.filetype + '\n'
+                else: # is dir with stuff; recurse
+                    tree_str = tree_str + child.to_string(depth=depth+1, prefix=prefix)
+            tree_str = self.filename + self.filetype + depth_tuple + '\n'
+            
+        else: # is file
             tree_str = self.filename + "." + self.filetype + depth_tuple + '\n'
             
 
