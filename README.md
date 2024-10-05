@@ -17,9 +17,12 @@ Python project for identifying code duplication issues in PN² v1.5 and perhaps 
 
 ## The master plan pipeline
 
-- [ ] save tree in Tree object
-- [ ] save path Tree to a file
-- [ ] identify duplicate name files
-- [ ] pick a duplicate file name from path Tree and print its [diffs](https://docs.python.org/3/library/difflib.html)
+- [x] Implement a to_string() tree printing method within Tree/Node_t.
+- [ ] Convert Path dir tree to Tree/Node_t object.
+- [ ] Impl. breadth first search for finding duplicate file/directory names.
+- [ ] Identify duplicate name files and log them.
+- [ ] Integrate with argparse for ease of use.
+- [ ] Let user select what was found.
+- [ ] Pick a duplicate file name from path Tree and print its [diffs](https://docs.python.org/3/library/difflib.html).
 - [ ] Save diffs to a file, e.g. a Google Sheet for ease of analyzing.
-- [ ] automate this
+- [ ] [automate this]
