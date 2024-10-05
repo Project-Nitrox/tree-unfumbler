@@ -28,7 +28,7 @@ class Tree(object):
         self.children.append(child)
 
 
-    def to_string(self, parent_depth=None, depth=0, inner_index=0) -> str:
+    def to_string(self, parent_depth=None, depth=0, check: bool=False) -> str:
         tree_str: str = self.filename
 
         parent_depth = depth - 1 if depth != 0 else None
@@ -44,33 +44,32 @@ class Tree(object):
 
 
         if self.filetype == "/": # is dir
-            if self.children == None: # is enmpty dir
+            if len(self.children) == 0 or self.children is None: # is enmpty dir
                 tree_str = self.filename + self.filetype + depth_tuple + '\n'
-                return tree_str
+                prefix = tpf_lastleaf if check else tpf_leaf
+                return prefix + tree_str
             else:
-                if parent_depth == None: # is root, special case recurse 
-                    tree_str = self.filename + self.filetype + '\n'
-                    for child in self.children:
-                        return self.to_string(depth=1)
+                if parent_depth is None: # is root, special case recurse 
+                    # pass
+                    return self.to_string(depth=1)
                 else: # is dir with children; recurse
                     tree_str = self.filename + self.filetype + depth_tuple + '\n'
+                    prefix = ""
+                    
                     for child, i in zip(self.children, range(len(self.children))):
-                        if i == len(self.children) - 1:
-                            pass
-                            # tree_str = tpf_lastleaf + tree_str
-                        else:
-                            pass
-                            # tree_str = tpf_leaf + tree_str
-                        # debug variant:
-                        # tree_str = tree_str + str(f"[{i},{len(self.children)}]") + child.to_string(depth=depth+1, prefix=tree_str)
-                        tree_str = tree_str + str(f"[{inner_index},{len(self.children)}]") + child.to_string(depth=depth+1, inner_index=len(self.children) - 1)
-                    return tree_str
-            tree_str = self.filename + self.filetype + depth_tuple + '\n'
-            return tree_str
+                        check = check
+                        tree_str = tree_str + child.to_string(depth=depth+1, check=(True if i == len(self.children) - 1 else False))
+                    prefix = tpf_leaf if self.filename != "." else ""
+                    prefix = tpf_lastleaf if check else tpf_leaf
+                    return prefix + tree_str
+            # THIS MIGHT NOT EVEN BE RAN:
+            # tree_str = self.filename + self.filetype + depth_tuple + '\n'
+            # return tree_str
             
         else: # is file
             tree_str = self.filename + "." + self.filetype + depth_tuple + '\n'
-            return tree_str
+            prefix = tpf_lastleaf if check else tpf_leaf
+            return prefix + tree_str
             
 
         # if self.filetype == "/" and self.children != None:
