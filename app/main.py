@@ -43,10 +43,10 @@ class Tree(object):
         tree_prefixes = [tpf_leaf] * (len(self.children) - 1) + [tpf_lastleaf]
         for child, pref in zip(self.children, tree_prefixes):
             filetype = "." + child.filetype if child.filetype != "/" else child.filetype
-            node_str = node_str + prefix + pref + child.filename + filetype + '\n'
+            node_str += prefix + pref + child.filename + filetype + '\n'
             if len(child.children) > 0:
                 extension = tpf_branch if pref == tpf_leaf else tpf_space
-                node_str = node_str + child.to_string(prefix=prefix+extension)
+                node_str += child.to_string(prefix=prefix+extension)
         return node_str
 
 
@@ -76,7 +76,7 @@ def path_to_iter(dir_path: Path, prefix: str=''):
         # Extend the prefix and recurse:
         if path.is_dir(): 
             extension = tpf_branch if tree_prefix == tpf_leaf else tpf_space
-            yield from print_pathtree(path, prefix=prefix+extension)
+            yield from path_to_iter(path, prefix=prefix+extension)
 
 
 def path_to_tree(dir_path: Path):
@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
     parent_tree = Tree(".", "/", [dir1, dir3, file_alone, dir4])
     print(parent_tree.to_string())
-    # for line in path_to_iter(Path("./testdir")):
-    #     print(line)
+    for line in path_to_iter(get_pafway()):
+        print(line)
     # path_to_tree(Path("./testdir"))
     
 
